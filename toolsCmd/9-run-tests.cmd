@@ -1,3 +1,3 @@
 @pushd ..
-call gradle :test --tests "mil.teng251.codesnippets.AppTest"
+call gradle :test --tests "mil.teng251.ntfs.streams.inspector.AppTest"
 @popd
