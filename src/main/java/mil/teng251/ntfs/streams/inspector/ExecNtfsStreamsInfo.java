@@ -70,7 +70,7 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         log.debug("]");
 
         List<FsItemStream> streamList = proc.loadStreams(cmdPath, fileList);
-        log.debug("streamList({})=[", fileList.size());
+        log.debug("streamList({})=[", streamList.size());
         for (FsItemStream item : streamList) {
             log.debug("- stream: {}", item);
         }
