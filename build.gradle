@@ -6,8 +6,8 @@ buildscript {
 }
 
 plugins {
-    id 'application'
-    id 'idea'
+    id('application')
+    id('idea')
 }
 
 repositories {
@@ -64,7 +64,7 @@ dependencies {
 }
 
 application {
-    mainClass = "mil.teng251.codesnippets.App"
+    mainClass = "mil.teng251.ntfs.streams.inspector.App"
 }
 
 jar {
@@ -86,7 +86,7 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.named('test') {
-    useJUnitPlatform();
+    useJUnitPlatform()
     classpath += files('config')
     println 'gradle! task-test'
 }

@@ -1,7 +1,7 @@
-package mil.teng251.ntfs.streams.inspector.ntfs;
+package mil.teng251.ntfs.streams.inspector;
 
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.ntfs.wrapper.NtfsWrapper;
+import mil.teng251.ntfs.streams.inspector.wrapper.NtfsWrapper;
 
 import java.io.IOException;
 import java.nio.file.Files;

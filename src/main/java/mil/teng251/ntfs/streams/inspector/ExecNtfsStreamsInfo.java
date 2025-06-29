@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs;
+package mil.teng251.ntfs.streams.inspector;
 
 import com.google.common.base.Strings;
 import de.vandermeer.asciitable.AT_Renderer;
@@ -8,9 +8,8 @@ import de.vandermeer.asciitable.CWC_FixedWidth;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.SnipExec;
-import mil.teng251.ntfs.streams.inspector.ntfs.dto.FsFolderInfo;
-import mil.teng251.ntfs.streams.inspector.ntfs.dto.FsItemStream;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderInfo;
+import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.tika.Tika;
 
@@ -47,22 +46,20 @@ import java.util.List;
  */
 @Slf4j
 public class ExecNtfsStreamsInfo implements SnipExec {
-
-    public static final String CMD_PATH = "path";
-    public static final String VALIDATE_INTERNET_DOWNLOAD = "ntfs-validate-internet-download";
-    public static final String LOAD_ADS_LIMIT = "ntfs-load-ads-limit";
-
     @Override
     public void execute(CommandLine commandLine) throws IOException {
         log.error("execute-beg");
-        String cmdPath = commandLine.getOptionValue(CMD_PATH);
+        boolean hasDVID = commandLine.hasOption(App.OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD);
+        log.debug("disable-validate-internet-download={}", hasDVID);
+
+        String cmdPath = commandLine.getArgList().get(0);
+
         if (Strings.isNullOrEmpty(cmdPath)) {
-            throw new IllegalArgumentException("param '-path' is null or empty!");
+            throw new IllegalArgumentException("param path is null or empty!");
         }
+
         cmdPath = CommonHelper.dropPathSeparator(cmdPath);
-        boolean cmdValidateInternet = commandLine.hasOption(VALIDATE_INTERNET_DOWNLOAD);
-        int cmdAdsLimit = Integer.parseInt(commandLine.getOptionValue(LOAD_ADS_LIMIT, "0"));
-        log.debug("cmdPath={} validateInternet={} cmdAdsLimit={}", cmdPath, cmdValidateInternet, cmdAdsLimit);
+        log.debug("cmdPath={} disableValidateInternetDownload={}", cmdPath, hasDVID);
         FileItemProcessor proc = new FileItemProcessor();
 
         List<FsFolderInfo> fileList = proc.loadFilesInfo(cmdPath);
@@ -79,19 +76,18 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         }
         log.debug("]");
 
-
         log.error("execute-end");
     }
 
     //@Override
     public void execute2(CommandLine commandLine) throws IOException {
-        String cmdPath = commandLine.getOptionValue(CMD_PATH);
+        String cmdPath = commandLine.getOptionValue("CMD_PATH");
         if (Strings.isNullOrEmpty(cmdPath)) {
             throw new IllegalArgumentException("param '-path' is null or empty!");
         }
         cmdPath = CommonHelper.dropPathSeparator(cmdPath);
-        boolean cmdValidateInternet = commandLine.hasOption(VALIDATE_INTERNET_DOWNLOAD);
-        int cmdAdsLimit = Integer.parseInt(commandLine.getOptionValue(LOAD_ADS_LIMIT, "0"));
+        boolean cmdValidateInternet = commandLine.hasOption("VALIDATE_INTERNET_DOWNLOAD");
+        int cmdAdsLimit = Integer.parseInt(commandLine.getOptionValue("LOAD_ADS_LIMIT", "0"));
         log.debug("cmdPath={} validateInternet={} cmdAdsLimit={}", cmdPath, cmdValidateInternet, cmdAdsLimit);
 
         FileItemProcessorPre proc = new FileItemProcessorPre();

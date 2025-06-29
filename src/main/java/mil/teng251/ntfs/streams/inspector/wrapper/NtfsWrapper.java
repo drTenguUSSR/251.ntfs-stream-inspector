@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs.wrapper;
+package mil.teng251.ntfs.streams.inspector.wrapper;
 
 import com.sun.jna.Memory;
 import com.sun.jna.platform.win32.Kernel32;
@@ -7,8 +7,8 @@ import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.ntfs.CommonHelper;
-import mil.teng251.ntfs.streams.inspector.ntfs.NtfsStreamInfo;
+import mil.teng251.ntfs.streams.inspector.CommonHelper;
+import mil.teng251.ntfs.streams.inspector.NtfsStreamInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs.wrapper;
+package mil.teng251.ntfs.streams.inspector.wrapper;
 
 
 import com.sun.jna.Native;

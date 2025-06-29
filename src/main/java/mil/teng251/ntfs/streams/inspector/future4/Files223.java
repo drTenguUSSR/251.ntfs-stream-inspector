@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs.future4;
+package mil.teng251.ntfs.streams.inspector.future4;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

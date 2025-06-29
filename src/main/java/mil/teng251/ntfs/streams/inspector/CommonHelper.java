@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs;
+package mil.teng251.ntfs.streams.inspector;
 
 import com.google.common.base.Strings;
 

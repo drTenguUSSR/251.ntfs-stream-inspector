@@ -1,10 +1,10 @@
-package mil.teng251.ntfs.streams.inspector.ntfs;
+package mil.teng251.ntfs.streams.inspector;
 
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.ntfs.dto.FsFolderInfo;
-import mil.teng251.ntfs.streams.inspector.ntfs.dto.FsItem;
-import mil.teng251.ntfs.streams.inspector.ntfs.dto.FsItemStream;
-import mil.teng251.ntfs.streams.inspector.ntfs.wrapper.NtfsWrapper;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderInfo;
+import mil.teng251.ntfs.streams.inspector.dto.FsItem;
+import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
+import mil.teng251.ntfs.streams.inspector.wrapper.NtfsWrapper;
 
 import java.io.File;
 import java.io.IOException;

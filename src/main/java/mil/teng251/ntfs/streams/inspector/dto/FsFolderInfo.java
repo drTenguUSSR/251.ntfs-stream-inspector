@@ -1,4 +1,4 @@
-package mil.teng251.ntfs.streams.inspector.ntfs.dto;
+package mil.teng251.ntfs.streams.inspector.dto;
 
 import lombok.Value;
 
