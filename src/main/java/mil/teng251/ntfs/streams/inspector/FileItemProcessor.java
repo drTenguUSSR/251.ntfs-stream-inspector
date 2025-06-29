@@ -1,5 +1,6 @@
 package mil.teng251.ntfs.streams.inspector;
 
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng251.ntfs.streams.inspector.dto.FsFolderInfo;
 import mil.teng251.ntfs.streams.inspector.dto.FsItem;
@@ -15,8 +16,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-
-import com.google.common.base.Strings;
 
 @Slf4j
 public class FileItemProcessor {
@@ -87,7 +86,7 @@ public class FileItemProcessor {
                 List<NtfsStreamInfo> allStreams = ntfsWrapper.getStreams(cmdPath, folderItem.getSubPath(), xfile.getName());
                 for (NtfsStreamInfo fileStream : allStreams) {
                     if (fileStream.getStreamName() == null) {
-                        continue; //skip main data
+                        //continue; //skip main data
                     }
                     if (xfile.isFolder()) {
                         FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
@@ -97,8 +96,8 @@ public class FileItemProcessor {
                         res.add(item);
                         continue;
                     }
-                    String ref2Stream =CommonHelper.makeFullPath(cmdPath, folderItem.getSubPath(), xfile.getName())
-                            + ":" + fileStream.getStreamName();
+                    String ref2Stream = CommonHelper.makeFullPath(cmdPath, folderItem.getSubPath(), xfile.getName())
+                            + (fileStream.getStreamName() == null ? "" : ":" + fileStream.getStreamName());
                     log.debug("ref2Stream={}", ref2Stream);
                     NtfsWrapper.ReadStreamLimitedResult readResult = NtfsWrapper.readStreamLimited(ref2Stream, 500);
                     if (readResult.isOverflow()) {
