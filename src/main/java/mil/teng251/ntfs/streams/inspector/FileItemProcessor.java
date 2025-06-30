@@ -2,7 +2,8 @@ package mil.teng251.ntfs.streams.inspector;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.dto.FsFolderInfo;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentItems;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentStreams;
 import mil.teng251.ntfs.streams.inspector.dto.FsItem;
 import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
 import mil.teng251.ntfs.streams.inspector.wrapper.NtfsWrapper;
@@ -12,16 +13,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class FileItemProcessor {
     private NtfsWrapper ntfsWrapper = new NtfsWrapper();
 
-    public List<FsFolderInfo> loadFilesInfo(String cmdPath) throws IOException {
+    public List<FsFolderContentItems> loadFilesInfo(String cmdPath) throws IOException {
         log.warn("fileItemProcessor: cmdPath={}", cmdPath);
 
         Path paramPath = Paths.get(cmdPath);
@@ -37,7 +35,7 @@ public class FileItemProcessor {
 
         //TODO: 1. try (Stream<Path> streamItem = Files.list(paramPath))
         //TODO: 2. use native win32 call
-        List<FsFolderInfo> res = new ArrayList<>();
+        List<FsFolderContentItems> res = new ArrayList<>();
         long totalFolders = 0;
         long totalFiles = 0;
         while (!unprocessedSubFolders.isEmpty()) {
@@ -70,20 +68,31 @@ public class FileItemProcessor {
                 }
                 folderContent.add(subA);
             }
-            res.add(new FsFolderInfo(currProcPath, folderContent));
+            res.add(new FsFolderContentItems(currProcPath, folderContent));
         }
         log.debug("summarize: files={} folders={}", totalFiles, totalFolders);
         return res;
     }
 
-    public List<FsItemStream> loadStreams(String cmdPath, List<FsFolderInfo> fileList) throws IOException {
+    /**
+     * результат: List<FsFolderContentStreams>
+     *     FsFolderContentStreams:=subPath:string,items:List<FsItemStream>
+     *         subPath - имя подпапок
+     *         items - список потоков для содержимого папки
+     * @param cmdPath
+     * @param fileList
+     * @return
+     * @throws IOException
+     */
+    public List<FsFolderContentStreams> loadStreams(String cmdPath, List<FsFolderContentItems> fileList) throws IOException {
         log.debug("loadStreams BEG");
-        List<FsItemStream> res = new ArrayList<>();
-        for (FsFolderInfo folderItem : fileList) {
+        List<FsFolderContentStreams> res = new ArrayList<>();
+        for (FsFolderContentItems folderItem : fileList) {
             List<FsItem> allFiles = folderItem.getItems();
+            List<FsItemStream> resSub=new ArrayList<>();
             for (FsItem xfile : allFiles) {
-                log.debug("load stream info from: base='{}' subPath='{}' xfile='{}'", cmdPath, folderItem.getSubPath(), xfile.getName());
-                List<NtfsStreamInfo> allStreams = ntfsWrapper.getStreams(cmdPath, folderItem.getSubPath(), xfile.getName());
+                log.debug("load stream info from: base='{}' subPaths='{}' xfile='{}'", cmdPath, folderItem.getSubPaths(), xfile.getName());
+                List<NtfsStreamInfo> allStreams = ntfsWrapper.getStreams(cmdPath, folderItem.getSubPaths(), xfile.getName());
                 for (NtfsStreamInfo fileStream : allStreams) {
                     if (fileStream.getStreamName() == null) {
                         //continue; //skip main data
@@ -93,10 +102,10 @@ public class FileItemProcessor {
                                 , fileStream.getStreamLength()
                                 , "directory has a stream. name=[" + fileStream.getStreamName() + "]"
                         );
-                        res.add(item);
+                        resSub.add(item);
                         continue;
                     }
-                    String ref2Stream = CommonHelper.makeFullPath(cmdPath, folderItem.getSubPath(), xfile.getName())
+                    String ref2Stream = CommonHelper.makeFullPath(cmdPath, folderItem.getSubPaths(), xfile.getName())
                             + (fileStream.getStreamName() == null ? "" : ":" + fileStream.getStreamName());
                     log.debug("ref2Stream={}", ref2Stream);
                     NtfsWrapper.ReadStreamLimitedResult readResult = NtfsWrapper.readStreamLimited(ref2Stream, 500);
@@ -105,26 +114,29 @@ public class FileItemProcessor {
                                 , fileStream.getStreamLength()
                                 , "stream too long"
                         );
-                        res.add(item);
+                        resSub.add(item);
                         continue;
                     }
                     if (!CommonHelper.isValidUtf8(readResult.getData())) {
                         FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
                                 , fileStream.getStreamLength()
                                 , "stream is not text. utf-8");
-                        res.add(item);
+                        resSub.add(item);
                         continue;
                     }
                     if (!CommonHelper.isTextData(readResult.getData())) {
                         FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
                                 , fileStream.getStreamLength(), "stream is not text. 866/1251/utf-8");
-                        res.add(item);
+                        resSub.add(item);continue;
                     }
                     FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
                             , fileStream.getStreamLength(), "not-suspect");
-                    res.add(item);
+                    resSub.add(item);
                 }
             }
+            log.debug("resSub.size={}",resSub.size());
+            FsFolderContentStreams dataSub = new FsFolderContentStreams(folderItem.getSubPaths(), resSub);
+            res.add(dataSub);
         }
         log.debug("loadStreams END");
         return res;

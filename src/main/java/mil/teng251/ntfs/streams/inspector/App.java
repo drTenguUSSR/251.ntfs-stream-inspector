@@ -20,14 +20,16 @@ import java.util.List;
  */
 @Slf4j
 public class App {
+    //sdds - (for file)   skip default data stream
+    //sef  - (for folder) skip empty folders
     private static String HELP_FOOTER_USAGE = ""
             + "\nпримеры вызова:"
             + "\n    java -jar client.jar D:\\INS\\251-ntfs-multi"
-            + "\n    java -jar client.jar -dvid D:\\INS\\251-ntfs-multi"
+            + "\n    java -jar client.jar -svid D:\\INS\\251-ntfs-multi"
             + "";
 
-    public static Option OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD = Option.builder("dvid")
-            .longOpt("disable-validate-internet-download")
+    public static Option OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD = Option.builder("svid")
+            .longOpt("skip-validate-internet-download")
             .numberOfArgs(0)
             .required(false)
             .desc("if present - skip validate 'Zone.Identifier' stream")

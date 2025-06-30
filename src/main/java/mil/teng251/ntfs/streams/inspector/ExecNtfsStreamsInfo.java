@@ -8,7 +8,8 @@ import de.vandermeer.asciitable.CWC_FixedWidth;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.dto.FsFolderInfo;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentItems;
+import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentStreams;
 import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.tika.Tika;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 /**
  * for IDE run:
@@ -62,17 +64,22 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         log.debug("cmdPath={} disableValidateInternetDownload={}", cmdPath, hasDVID);
         FileItemProcessor proc = new FileItemProcessor();
 
-        List<FsFolderInfo> fileList = proc.loadFilesInfo(cmdPath);
+        List<FsFolderContentItems> fileList = proc.loadFilesInfo(cmdPath);
         log.debug("fileList({})=[", fileList.size());
-        for (FsFolderInfo item : fileList) {
+        for (FsFolderContentItems item : fileList) {
             log.debug("- file: {}", item);
         }
         log.debug("]");
 
-        List<FsItemStream> streamList = proc.loadStreams(cmdPath, fileList);
+        List<FsFolderContentStreams> streamList = proc.loadStreams(cmdPath, fileList);
         log.debug("streamList({})=[", streamList.size());
-        for (FsItemStream item : streamList) {
-            log.debug("- stream: {}", item);
+        for (FsFolderContentStreams folderCS : streamList) {
+            log.debug("================ subPaths: !{}!", folderCS.getSubPaths());
+            List<FsItemStream> vals = folderCS.getItems();
+            for (FsItemStream item : vals) {
+                log.debug("- {}", item);
+            }
+            log.debug("=====================================");
         }
         log.debug("]");
 
