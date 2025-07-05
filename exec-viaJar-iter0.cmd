@@ -1,0 +1,1 @@
+java -Djava.io.tmpdir=tmpFolder -Dlog4j2.configurationFile=config/log4j2.xml -jar build/libs/ntfs-streams-inspector.jar -svid D:\INS\251-subfolders-iter0

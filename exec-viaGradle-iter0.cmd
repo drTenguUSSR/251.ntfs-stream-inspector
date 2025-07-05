@@ -1,0 +1,1 @@
+gradlew run --args="-svid D:\INS\251-ntfs-multi\bravo.txt"

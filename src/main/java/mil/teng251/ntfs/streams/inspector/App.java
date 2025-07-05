@@ -60,6 +60,7 @@ public class App {
                 log.error(msg);
                 printHelp(options);
                 System.err.println(msg);
+                return;
             }
             ExecNtfsStreamsInfo exec = new ExecNtfsStreamsInfo();
             exec.execute(commandLine);

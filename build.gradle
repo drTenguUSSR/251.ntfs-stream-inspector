@@ -65,6 +65,7 @@ dependencies {
 
 application {
     mainClass = "mil.teng251.ntfs.streams.inspector.App"
+    //applicationDefaultJvmArgs = ['-Dlog4j.configurationFile=./log4j2-xxx.xml']
 }
 
 jar {
@@ -92,6 +93,8 @@ tasks.named('test') {
 }
 
 tasks.named('run') {
+    systemProperties = System.properties
+    //systemProperties['log4j.configurationFile'] = 'path/to/log4j2.xml'
     classpath += files('config')
 
     it.doFirst {

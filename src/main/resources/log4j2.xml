@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- неограниченное "застревание" файлов за предыдущий час по лимиту IfAccumulatedFileSize -->
+<!--ротации-перезаписи проводятся только в рамках текущего часа -->
+<!-- но устаревшие файлы дочищяет IfAccumulatedFileCount -->
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               strict="true" status="INFO" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex"/>
+        <Property name="LOG_PATH" value="logs"/>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="FileAppender" fileName="${LOG_PATH}/default.log"
+                     filePattern="${LOG_PATH}/archive/default.%d{yyyyMMdd-HH}-%i.log.zip">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 Mb" />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOG_PATH}/archive/" maxDepth="1">
+                    <IfFileName glob="default.*.log.zip"/>
+                    <IfAny>
+                        <IfAccumulatedFileCount exceeds="12"/>
+                        <IfAccumulatedFileSize exceeds="120 Mb" />
+                    </IfAny>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="mil.teng251" level="INFO"/>
+<!--        <Logger name="com.sun.mail.smtp" level="DEBUG"/>-->
+<!--        <Logger name="org.hibernate.SQL" level="DEBUG"/>-->
+<!--        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>-->
+<!--        <Logger name="liquibase" level="TRACE"/>-->
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
