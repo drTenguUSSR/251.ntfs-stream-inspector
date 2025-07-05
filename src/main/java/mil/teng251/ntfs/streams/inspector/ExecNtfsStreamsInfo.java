@@ -9,10 +9,12 @@ import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentStreams;
+import mil.teng251.ntfs.streams.inspector.dto.FsItem;
 import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.tika.Tika;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -72,11 +74,19 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         if (Files.isDirectory(paramPath)) {
             streamList = proc.createFullReportForSubfolders(cmdPath);
         } else {
-            throw new IllegalArgumentException("file as parameter not supported yet");
-            //List<FsItemStream> fileReports = proc.createReportForOneFile(cmdPath, null, null);
-            //FsFolderContentStreams rep = new FsFolderContentStreams(cmdPath, fileReports);
-            //streamList = new ArrayList<>();
-            //streamList.add(rep);
+            int sepPos = cmdPath.lastIndexOf(File.separatorChar);
+            if (sepPos == -1) {
+                throw new IllegalArgumentException("path-to-file [" + cmdPath + "] not contain "
+                        + "pathSeparator='" + File.separatorChar + "'");
+            }
+            String folderA = cmdPath.substring(0, sepPos);
+            String fileA = cmdPath.substring(sepPos + 1);
+            log.debug("target-file: folderA='{}' fileA='{}'", folderA, fileA);
+            FsItem xfile = new FsItem(fileA, false);
+            List<FsItemStream> fileReports = proc.createReportForOneFile(folderA, null, xfile);
+            FsFolderContentStreams rep = new FsFolderContentStreams(cmdPath, fileReports);
+            streamList = new ArrayList<>();
+            streamList.add(rep);
         }
 
 

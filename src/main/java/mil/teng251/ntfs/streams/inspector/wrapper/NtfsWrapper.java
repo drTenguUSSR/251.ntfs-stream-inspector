@@ -110,7 +110,7 @@ public class NtfsWrapper {
      * возвращается null
      * @throws IOException
      */
-    public List<NtfsStreamInfo> getStreams(String basePath, @NonNull String subPath, @NonNull String fileName) throws IOException {
+    public List<NtfsStreamInfo> getStreams(@NonNull String basePath, String subPath, @NonNull String fileName) throws IOException {
         List<NtfsStreamInfo> resList = new ArrayList<>();
         WinNT.HANDLE handle = null;
         String filePath = "\\\\?\\" + CommonHelper.makeFullPath(basePath, subPath, fileName);
