@@ -99,9 +99,8 @@ public class NtfsWrapper {
         }
     }
 
-
     /**
-     * информация о всех NTFSпотоках указанного файла - $basePath\$subPath\$fileName
+     * информация о всех NTFS-потоках указанного файла - $basePath\$subPath\$fileName
      *
      * @param basePath папка (без pathSeparator в конце имени)
      * @param subPath  подпапка

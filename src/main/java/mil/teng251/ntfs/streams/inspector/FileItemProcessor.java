@@ -63,6 +63,7 @@ public class FileItemProcessor {
 
     /**
      * Загрузка файловых данных на уровне одной папки
+     *
      * @param cmdPath
      * @param currProcPath
      * @param unprocessedSubFolders
@@ -141,6 +142,14 @@ public class FileItemProcessor {
         log.debug("load stream info from: base='{}' subPaths='{}' xfile='{}'", cmdPath, subPaths, xfile.getName());
         List<FsItemStream> resSub = new ArrayList<>();
         List<NtfsStreamInfo> allStreams = ntfsWrapper.getStreams(cmdPath, subPaths, xfile.getName());
+        boolean allDetail = true;
+        if (allDetail && allStreams.isEmpty()) {
+            FsItemStream item = new FsItemStream(xfile, null
+                    , 0
+                    , "directory w/o stream"
+            );
+            resSub.add(item);
+        }
         for (NtfsStreamInfo fileStream : allStreams) {
             if (fileStream.getStreamName() == null) {
                 //continue; //skip main data
@@ -178,9 +187,11 @@ public class FileItemProcessor {
                 resSub.add(item);
                 continue;
             }
-            FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
-                    , fileStream.getStreamLength(), "not-suspect");
-            resSub.add(item);
+            if (allDetail) {
+                FsItemStream item = new FsItemStream(xfile, fileStream.getStreamName()
+                        , fileStream.getStreamLength(), "not-suspect");
+                resSub.add(item);
+            }
         }
         return resSub;
     }
