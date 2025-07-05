@@ -14,7 +14,7 @@
           <option value="--args=&quot;-svid D:\INS\251-subfolders-iter2&quot;" />
         </list>
       </option>
-      <option name="vmOptions" value="" />
+      <option name="vmOptions" value="-Djava.io.tmpdir=tmpFolder -Dlog4j2.configurationFile=config/log4j2.xml" />
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
