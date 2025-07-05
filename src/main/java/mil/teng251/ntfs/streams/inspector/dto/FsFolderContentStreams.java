@@ -7,7 +7,7 @@ import java.util.List;
 @Value
 public class FsFolderContentStreams {
     /**
-     * Имя подпапки (путь от баковой папки до целевой папки)
+     * Имя подпапки (путь от базовой папки до целевой папки)
      * для которой собрана информация
      */
     String subPaths;

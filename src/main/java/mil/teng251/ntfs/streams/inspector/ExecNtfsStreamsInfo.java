@@ -8,7 +8,6 @@ import de.vandermeer.asciitable.CWC_FixedWidth;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentItems;
 import mil.teng251.ntfs.streams.inspector.dto.FsFolderContentStreams;
 import mil.teng251.ntfs.streams.inspector.dto.FsItemStream;
 import org.apache.commons.cli.CommandLine;
@@ -18,8 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * for IDE run:
@@ -59,19 +58,28 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         if (Strings.isNullOrEmpty(cmdPath)) {
             throw new IllegalArgumentException("param path is null or empty!");
         }
+        Path paramPath = Paths.get(cmdPath);
+        if (!Files.exists(paramPath)) {
+            throw new IllegalArgumentException("path [" + cmdPath + "] not exist");
+        }
 
         cmdPath = CommonHelper.dropPathSeparator(cmdPath);
-        log.debug("cmdPath={} disableValidateInternetDownload={}", cmdPath, hasDVID);
+        log.debug("cmdPath={} isFolder={} disableValidateInternetDownload={}", cmdPath,
+                Files.isDirectory(paramPath), hasDVID);
         FileItemProcessor proc = new FileItemProcessor();
 
-        List<FsFolderContentItems> fileList = proc.loadFilesInfo(cmdPath);
-        log.debug("fileList({})=[", fileList.size());
-        for (FsFolderContentItems item : fileList) {
-            log.debug("- file: {}", item);
+        List<FsFolderContentStreams> streamList = null;
+        if (Files.isDirectory(paramPath)) {
+            streamList = proc.createFullReportForSubfolders(cmdPath);
+        } else {
+            throw new IllegalArgumentException("file as parameter not supported yet");
+            //List<FsItemStream> fileReports = proc.createReportForOneFile(cmdPath, null, null);
+            //FsFolderContentStreams rep = new FsFolderContentStreams(cmdPath, fileReports);
+            //streamList = new ArrayList<>();
+            //streamList.add(rep);
         }
-        log.debug("]");
 
-        List<FsFolderContentStreams> streamList = proc.loadStreams(cmdPath, fileList);
+
         log.debug("streamList({})=[", streamList.size());
         for (FsFolderContentStreams folderCS : streamList) {
             log.debug("================ subPaths: !{}!", folderCS.getSubPaths());
@@ -82,7 +90,6 @@ public class ExecNtfsStreamsInfo implements SnipExec {
             log.debug("=====================================");
         }
         log.debug("]");
-
         log.error("execute-end");
     }
 

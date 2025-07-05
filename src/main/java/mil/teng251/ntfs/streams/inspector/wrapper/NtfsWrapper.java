@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinBase;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
+import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng251.ntfs.streams.inspector.CommonHelper;
@@ -109,7 +110,7 @@ public class NtfsWrapper {
      * возвращается null
      * @throws IOException
      */
-    public List<NtfsStreamInfo> getStreams(String basePath, String subPath, String fileName) throws IOException {
+    public List<NtfsStreamInfo> getStreams(String basePath, @NonNull String subPath, @NonNull String fileName) throws IOException {
         List<NtfsStreamInfo> resList = new ArrayList<>();
         WinNT.HANDLE handle = null;
         String filePath = "\\\\?\\" + CommonHelper.makeFullPath(basePath, subPath, fileName);

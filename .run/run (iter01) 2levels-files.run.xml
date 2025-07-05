@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="run 251-subfolders-iter0" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="run (iter01) 2levels-files" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -11,7 +11,7 @@
       <option name="taskNames">
         <list>
           <option value="run" />
-          <option value="--args=&quot;-svid D:\INS\251-subfolders-iter0&quot;" />
+          <option value="--args=&quot;-svid D:\INS\251-subfolders-iter01&quot;" />
         </list>
       </option>
       <option name="vmOptions" value="" />
