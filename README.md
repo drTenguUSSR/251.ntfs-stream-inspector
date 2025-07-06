@@ -79,9 +79,9 @@ java -Dlog4j2.configurationFile=log4j2.xml -Djava.io.tmpdir=tmpFolder -Dfile.enc
 <dt>актуальные кодировки, используемые в Windows</dt>
 <dd>
     <dl>
-        <dt>-cp866</dt>
+        <dt>cp866</dt>
         <dd>кодировка по умолчанию в cmd</dd>
-        <dt>-cp1251</dt>
+        <dt>cp1251</dt>
         <dd>кодировка по умолчанию, выводимая в Winows</dd>
     </dl>
 </dl>
