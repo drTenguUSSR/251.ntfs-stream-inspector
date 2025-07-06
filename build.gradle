@@ -94,7 +94,14 @@ tasks.named('test') {
 
 tasks.named('run') {
     systemProperties = System.properties
-    systemProperties['log4j.configurationFile'] = 'config/log4j2.xml'
+    def log4jcfg='config/log4j2.xml'
+    File cfgFile = new File(log4jcfg)
+    if (cfgFile.exists()) {
+        println "log4j \"$log4jcfg\" found"
+        systemProperties['log4j.configurationFile'] = log4jcfg
+    } else {
+        println "log4j \"$log4jcfg\" not-found"
+    }
 
     it.doFirst {
         //systemProperty 'java.io.tmpdir', 'tmpFolder'
