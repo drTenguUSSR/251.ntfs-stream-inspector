@@ -36,7 +36,8 @@ public class App {
             .build();
 
     public static void main(String[] args) throws IOException {
-        log.debug("app-beg");
+        //System.setProperty("log4j.configurationFile", Paths.get("config", "log4j2.xml").toUri().toString());
+        log.debug("app-beg. начало");
         if (args == null) {
             log.warn("call for help:\n\n\tjava -jar Client.jar ");
             return;

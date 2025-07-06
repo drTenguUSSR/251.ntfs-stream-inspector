@@ -14,9 +14,9 @@
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
-        <RollingFile name="FileAppender" fileName="${LOG_PATH}/main.log"
-                     filePattern="${LOG_PATH}/archive/main.%d{yyyyMMdd-HH}-%i.log.zip">
-            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+        <RollingFile name="FileAppender" fileName="${LOG_PATH}/main-cust.log"
+                     filePattern="${LOG_PATH}/archive/main-cust.%d{yyyyMMdd-HH}-%i.log.zip">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="cp866"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
                 <TimeBasedTriggeringPolicy/>
@@ -24,7 +24,7 @@
             </Policies>
             <DefaultRolloverStrategy>
                 <Delete basePath="${LOG_PATH}/archive/" maxDepth="1">
-                    <IfFileName glob="main.*.log.zip"/>
+                    <IfFileName glob="main-cust.*.log.zip"/>
                     <IfAny>
                         <IfAccumulatedFileCount exceeds="12"/>
                         <IfAccumulatedFileSize exceeds="120 Mb" />
