@@ -28,13 +28,6 @@ public class App {
             + "\n    java -jar client.jar -svid D:\\INS\\251-ntfs-multi"
             + "";
 
-    public static Option OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD = Option.builder("svid")
-            .longOpt("skip-validate-internet-download")
-            .numberOfArgs(0)
-            .required(false)
-            .desc("if present - skip validate 'Zone.Identifier' stream")
-            .build();
-
     public static void main(String[] args) throws IOException {
         //System.setProperty("log4j.configurationFile", Paths.get("config", "log4j2.xml").toUri().toString());
         log.debug("app-beg. начало");
@@ -48,9 +41,7 @@ public class App {
         }
         log.debug("]");
 
-        Options options = new Options();
-        options.addOption(OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD);
-
+        Options options = CmdLineHelper.makeOptions();
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine commandLine = parser.parse(options, args);

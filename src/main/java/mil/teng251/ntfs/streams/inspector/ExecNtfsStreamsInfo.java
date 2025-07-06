@@ -52,7 +52,24 @@ public class ExecNtfsStreamsInfo implements SnipExec {
     @Override
     public void execute(CommandLine commandLine) throws IOException {
         log.error("execute-beg");
-        boolean hasDVID = commandLine.hasOption(App.OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD);
+
+        List<FsFolderContentStreams> streamList = makeReport(commandLine);
+
+        log.debug("streamList({})=[", streamList.size());
+        for (FsFolderContentStreams folderCS : streamList) {
+            log.debug("================ subPaths: !{}!", folderCS.getSubPaths());
+            List<FsItemStream> vals = folderCS.getItems();
+            for (FsItemStream item : vals) {
+                log.debug("- {}", item);
+            }
+            log.debug("=====================================");
+        }
+        log.debug("]");
+        log.error("execute-end");
+    }
+
+    public List<FsFolderContentStreams> makeReport(CommandLine commandLine) throws IOException {
+        boolean hasDVID = commandLine.hasOption(CmdLineHelper.OPT_SKIP_VALIDATE_INTERNET_DOWNLOAD);
         log.debug("disable-validate-internet-download={}", hasDVID);
 
         String cmdPath = commandLine.getArgList().get(0);
@@ -68,9 +85,9 @@ public class ExecNtfsStreamsInfo implements SnipExec {
         cmdPath = CommonHelper.dropPathSeparator(cmdPath);
         log.debug("cmdPath={} isFolder={} disableValidateInternetDownload={}", cmdPath,
                 Files.isDirectory(paramPath), hasDVID);
-        FileItemProcessor proc = new FileItemProcessor();
 
-        List<FsFolderContentStreams> streamList = null;
+        FileItemProcessor proc = new FileItemProcessor();
+        List<FsFolderContentStreams> streamList;
         if (Files.isDirectory(paramPath)) {
             streamList = proc.createFullReportForSubfolders(cmdPath);
         } else {
@@ -88,19 +105,7 @@ public class ExecNtfsStreamsInfo implements SnipExec {
             streamList = new ArrayList<>();
             streamList.add(rep);
         }
-
-
-        log.debug("streamList({})=[", streamList.size());
-        for (FsFolderContentStreams folderCS : streamList) {
-            log.debug("================ subPaths: !{}!", folderCS.getSubPaths());
-            List<FsItemStream> vals = folderCS.getItems();
-            for (FsItemStream item : vals) {
-                log.debug("- {}", item);
-            }
-            log.debug("=====================================");
-        }
-        log.debug("]");
-        log.error("execute-end");
+        return streamList;
     }
 
     //@Override

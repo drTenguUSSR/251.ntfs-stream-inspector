@@ -25,7 +25,8 @@ idea {
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter:5.7.2"
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation('org.mockito:mockito-core:3.12.4')
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     //implementation "com.google.guava:guava:30.1.1-jre"
@@ -68,6 +69,11 @@ application {
     //applicationDefaultJvmArgs = ['-Dlog4j.configurationFile=./log4j2-xxx.xml']
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 jar {
     manifest {
         attributes(
@@ -86,10 +92,19 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-tasks.named('test') {
+tasks.withType(Test) {
     useJUnitPlatform()
-    classpath += files('config')
     println 'gradle! task-test'
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    //maxParallelForks = Runtime.runtime.availableProcessors()
+    //forkEvery = 1
+    //jvmArgs '-Xmx1024m', '-XX:MaxPermSize=256m'
+    reports {
+        html.enabled = true
+        junitXml.enabled = true
+    }
 }
 
 tasks.named('run') {

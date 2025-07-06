@@ -13,6 +13,8 @@ class AppTest {
     public static void xlog(String msg) {
         System.out.println(msg);
     }
+
+    //@Test
     public void fastPass() {
         logger.debug("fastPass: debug");
         logger.warn("fastPass: warn");
